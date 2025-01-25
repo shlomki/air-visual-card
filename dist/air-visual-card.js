@@ -413,7 +413,7 @@ class AirVisualCard extends HTMLElement {
 	console.info("aplSensor typeof=" + typeof hass.states[aplSensor.config]);
 	    
       if (typeof hass.states[aplSensor.config] != "undefined") { //If APL sensor is available
-        let aplState = hass.states[aqiSensor.config].state;
+        let aplState = hass.states[aplSensor.config].state;
 	let aplParse = parseInt(aplState);
       	console.info("aplState=" + aplState);
       	console.info("aplParse=" + aplParse);
