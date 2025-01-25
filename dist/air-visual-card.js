@@ -371,9 +371,13 @@ class AirVisualCard extends HTMLElement {
       let tempValue = '';
       let pollutantUnit = '';
       let apl = '';
+      let aplNumber = '';
       let mainPollutant = '';
       let speed_unit = speedUnit;
       let getAQI = function () {
+	if (aplNumber != '') {
+	  return aplNumber;
+	}
         switch (true) {
           case (aqiSensor.value <= 50):
             return '1';
@@ -410,25 +414,21 @@ class AirVisualCard extends HTMLElement {
         }         
       }
       // Check if APL is an WAQI sensor (because the state is an integer). Returns 'NaN' if it is not a number
-	console.info("aplSensor typeof=" + typeof hass.states[aplSensor.config]);
-	    
       if (typeof hass.states[aplSensor.config] != "undefined") { //If APL sensor is available
         let aplState = hass.states[aplSensor.config].state;
 	let aplParse = parseInt(aplState);
-      	console.info("aplState=" + aplState);
-      	console.info("aplParse=" + aplParse);
         if (!isNaN(aplParse)) { //If it's a number, translate the number to a description
           apl = APLdescription[aplParse];      
+	  aplNumber = aplParse;
         } else { //If it's a string, use the string
           apl = aplState;
         }
-      } 
-
-      if (typeof hass.states[aqiSensor.config] != "undefined") { //The AQI sensor is independent of APL. If it's available, set it.
-        aqiSensor.value = hass.states[aqiSensor.config].state;
       }
 
-	
+      if (typeof hass.states[aqiSensor.config] != "undefined") { //The AQI sensor is independent of APL. If it's available, set it.
+        aqiSensor.value = parseInt(hass.states[aqiSensor.config].state);
+      }
+
       let faceHTML = ``;
 
       let card_content = `<div class="grid-container">`;
