@@ -2,7 +2,7 @@
 // Plant Picture Card: https://github.com/badguy99/PlantPictureCard/blob/master/dist/PlantPictureCard.js
 // UPDATE FOR EACH RELEASE!!! From aftership-card. Version # is hard-coded for now.
 console.info(
-  '%c  AIR-VISUAL-CARD  \n%c  Version 2.0.4',
+  '%c  AIR-VISUAL-CARD  \n%c  Version 2.0.5',
   'color: orange; font-weight: bold; background: black',
   'color: white; font-weight: bold; background: dimgray',
 );
@@ -410,26 +410,20 @@ class AirVisualCard extends HTMLElement {
         }         
       }
       // Check if APL is an WAQI sensor (because the state is an integer). Returns 'NaN' if it is not a number
-      if (typeof hass.states[aplSensor.config] != "undefined") {
-        let aplParse = parseInt(hass.states[aqiSensor.config].state);
-        aqiSensor.value = aplParse;
-        if (!isNaN(aplParse)) {
-          apl = APLdescription[getAQI()];      
-        } else {
-          let aplState = hass.states[aplSensor.config].state;
-          apl = hass.localize("component.sensor.state.airvisual__pollutant_level." + aplState)
+      if (typeof hass.states[aplSensor.config] != "undefined") { //If APL sensor is available
+        let aplState = hass.states[aqiSensor.config].state;
+	let aplParse = parseInt(aplState);
+        if (!isNaN(aplParse)) { //If it's a number, translate the number to a description
+          apl = APLdescription[aplParse];      
+        } else { //If it's a string, use the string
+          apl = aplState;
         }
-      } else if (typeof hass.states[aqiSensor.config] != "undefined") {
+      } else if (typeof hass.states[aqiSensor.config] != "undefined") { //If the APL sensor is not available, check if API sensor is available
         aqiSensor.value = hass.states[aqiSensor.config].state;
         apl = APLdescription[getAQI()];   
       }
 
-
-  
-
-
-
-
+	
       let faceHTML = ``;
 
       let card_content = `<div class="grid-container">`;
