@@ -418,9 +418,10 @@ class AirVisualCard extends HTMLElement {
         } else { //If it's a string, use the string
           apl = aplState;
         }
-      } else if (typeof hass.states[aqiSensor.config] != "undefined") { //If the APL sensor is not available, check if API sensor is available
+      } 
+
+      if (typeof hass.states[aqiSensor.config] != "undefined") { //The AQI sensor is independent of APL. If it's available, set it.
         aqiSensor.value = hass.states[aqiSensor.config].state;
-        apl = APLdescription[getAQI()];   
       }
 
 	
